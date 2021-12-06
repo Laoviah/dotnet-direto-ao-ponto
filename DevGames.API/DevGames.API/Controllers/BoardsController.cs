@@ -20,7 +20,7 @@ namespace DevGames.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult GetAll()
         {
             return Ok(_context.Boards);
         }
@@ -41,12 +41,12 @@ namespace DevGames.API.Controllers
         {
             var board = _mapper.Map<Board>(model);
 
-            //var board = new Board(model.Id, model.GameTitle, model.Description, model.Rules);
-
             _context.Boards.Add(board);
 
+            _context.SaveChanges();
+
             //location api/[controller]/id
-            return CreatedAtAction("GetById", new { id = model.Id}, model);
+            return CreatedAtAction("GetById", new { id = board.Id }, model) ;
         }
 
         [HttpPut]
@@ -58,6 +58,8 @@ namespace DevGames.API.Controllers
                 return NotFound();
 
             board.Update(model.Description, model.Rules);
+           
+            _context.SaveChanges();
 
             return NoContent();
         }
